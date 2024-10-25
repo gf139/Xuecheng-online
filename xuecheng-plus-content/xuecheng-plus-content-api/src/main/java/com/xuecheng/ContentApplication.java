@@ -1,4 +1,4 @@
-package com.xuecheng.content;
+package com.xuecheng;
 
 
 import com.spring4all.swagger.EnableSwagger2Doc;

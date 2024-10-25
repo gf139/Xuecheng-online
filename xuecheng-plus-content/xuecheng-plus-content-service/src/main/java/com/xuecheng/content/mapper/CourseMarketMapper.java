@@ -12,5 +12,6 @@ import com.xuecheng.model.po.CourseMarket;
  * @since 2024-10-09
  */
 public interface CourseMarketMapper extends BaseMapper<CourseMarket> {
+   int insertCourseMarket(CourseMarket courseMarket);
 
 }
