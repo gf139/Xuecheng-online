@@ -17,4 +17,10 @@ import java.util.List;
  */
 public interface TeachplanMapper extends BaseMapper<Teachplan> {
     public List<TeachplanDto> selectTreeNodes(long courseId);
+
+    /**
+     * 逻辑删除
+     * @param courseId
+     */
+    public void deleteTeachplan(Long courseId);
 }

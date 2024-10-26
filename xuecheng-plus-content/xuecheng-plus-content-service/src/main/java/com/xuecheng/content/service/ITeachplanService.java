@@ -34,4 +34,10 @@ public interface ITeachplanService extends IService<Teachplan> {
      * @date 2022/9/9 13:39
      */
     public void saveTeachplan(SaveTeachplanDto teachplanDto);
+
+    /**
+     * @description 删除课程计划
+     * @param courseId
+     */
+    public void deleteTeachplan(Long courseId);
 }
