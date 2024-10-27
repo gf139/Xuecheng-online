@@ -2,8 +2,10 @@ package com.xuecheng.content.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xuecheng.model.dto.EditCourseTeacherDto;
 import com.xuecheng.model.dto.SaveTeachplanDto;
 import com.xuecheng.model.dto.TeachplanDto;
+import com.xuecheng.model.po.CourseTeacher;
 import com.xuecheng.model.po.Teachplan;
 
 import java.util.List;
@@ -40,4 +42,41 @@ public interface ITeachplanService extends IService<Teachplan> {
      * @param courseId
      */
     public void deleteTeachplan(Long courseId);
+
+    /**
+     * @description 课程计划排序
+     * @param move
+     * @param courseId
+     */
+    public void orderTeachplan(String move,Long courseId);
+
+    /**
+     * 查询老师
+     * @param courseId
+     * @return
+     */
+    public List<CourseTeacher> getTeacher(Long courseId);
+
+    /**
+     * 添加或修改老师
+     * @param editCourseTeacherDto
+     * @return
+     */
+    CourseTeacher savecourseTeacher(EditCourseTeacherDto editCourseTeacherDto,Long companyId);
+
+    /**
+     * 删除老师
+     * @param courseId
+     * @param teacherId
+     * @param companyId
+     * @return
+     */
+    void deletecourseTeacher(Long courseId, Long teacherId, Long companyId);
+
+    /**
+     * 删除课程
+     * @param courseId
+     * @param companyId
+     */
+    void deletecourse(Long courseId, Long companyId);
 }

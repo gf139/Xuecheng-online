@@ -68,11 +68,32 @@
         from teachplan one
                  LEFT JOIN teachplan two on one.id = two.parentid
                  LEFT JOIN teachplan_media m1 on m1.teachplan_id = two.id
-        where one.parentid = 0 and one.course_id=#{value} and one.status = 1 and two.status = 1
+        where one.parentid = 0 and one.course_id=#{value}
         order by one.orderby,
                  two.orderby
     </select>
+
     <delete id="deleteTeachplan" parameterType="java.lang.Long">
         update teachplan set status=0 where id=#{value}
     </delete>
+
+    <select id="findUp" resultType="java.lang.Long">
+        select
+            one.id
+        from teachplan one
+        where one.course_id=#{courseId} and one.parentid = #{parentId} and one.status = 1 and one.orderby &lt; #{orderId}
+        order by one.orderby desc
+        limit 1
+    </select>
+
+    <select id="findDown" resultType="java.lang.Long">
+        select
+            one.id
+        from teachplan one
+        where one.course_id=#{courseId} and one.parentid = #{parentId} and one.status = 1 and one.orderby &gt; #{orderId}
+        order by one.orderby desc
+        limit 1
+    </select>
+
+
 </mapper>
