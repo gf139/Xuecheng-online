@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.content.mapper.*;
 import com.xuecheng.content.service.ITeachplanService;
+import com.xuecheng.model.dto.BindTeachplanMediaDto;
 import com.xuecheng.model.dto.EditCourseTeacherDto;
 import com.xuecheng.model.dto.SaveTeachplanDto;
 import com.xuecheng.model.dto.TeachplanDto;
@@ -48,6 +49,7 @@ public class TeachplanServiceImpl extends ServiceImpl<TeachplanMapper, Teachplan
 
     @Autowired
     TeachplanWorkMapper teachplanWorkMapper;
+
 
     /**
      * 根据课程id查询课程计划
@@ -309,4 +311,33 @@ public class TeachplanServiceImpl extends ServiceImpl<TeachplanMapper, Teachplan
         }
     }
 
+    @Override
+    @Transactional
+    public TeachplanMedia associationMedia(BindTeachplanMediaDto bindTeachplanMediaDto) {
+        //拿到id查找教学计划
+        Long teachplanId = bindTeachplanMediaDto.getTeachplanId();
+        Teachplan teachplan = teachplanMapper.selectById(teachplanId);
+        if(teachplan == null){
+            XueChengPlusException.cast("教学计划不存在");
+        }
+        //如果有，那就判断是否是第二级
+        Integer grade = teachplan.getGrade();
+        if(grade != 2){
+            XueChengPlusException.cast("只允许第二级教学计划绑定媒资文件");
+        }
+        //判断完成，可以插入，查找视频是否上传
+        Long courseId = teachplan.getCourseId();
+        //先删掉原来的媒资
+        teachplanMediaMapper.delete(new LambdaQueryWrapper<TeachplanMedia>().eq(TeachplanMedia::getTeachplanId,teachplanId));
+
+        //再添加教学计划和媒资管理
+        TeachplanMedia teachplanMedia = new TeachplanMedia();
+        teachplanMedia.setCourseId(courseId);
+        teachplanMedia.setTeachplanId(teachplanId);
+        teachplanMedia.setMediaFilename(bindTeachplanMediaDto.getFileName());
+        teachplanMedia.setMediaId(bindTeachplanMediaDto.getMediaId());
+        teachplanMedia.setCreateDate(LocalDateTime.now());
+        teachplanMediaMapper.insert(teachplanMedia);
+        return teachplanMedia;
+    }
 }

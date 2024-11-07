@@ -1,6 +1,7 @@
 package com.xuecheng.content.api;
 
 import com.xuecheng.content.service.ITeachplanService;
+import com.xuecheng.model.dto.BindTeachplanMediaDto;
 import com.xuecheng.model.dto.EditCourseTeacherDto;
 import com.xuecheng.model.dto.SaveTeachplanDto;
 import com.xuecheng.model.dto.TeachplanDto;
@@ -21,6 +22,7 @@ public class TeachplanController {
 
     @Autowired
     ITeachplanService iTeachplanService;
+
 
     @ApiOperation("查询课程计划树形结构")
     @ApiImplicitParam(value = "courseId", name = "课程Id", required = true, dataType = "Long", paramType = "path")
@@ -77,4 +79,11 @@ public class TeachplanController {
         Long companyId = 1232141425L;
         iTeachplanService.deletecourse(courseId,companyId);
     }
+
+    @ApiOperation(value = "课程计划和媒资信息绑定")
+    @PostMapping("/teachplan/association/media")
+    public void associationMedia(@RequestBody BindTeachplanMediaDto bindTeachplanMediaDto){
+        iTeachplanService.associationMedia(bindTeachplanMediaDto);
+    }
+
 }

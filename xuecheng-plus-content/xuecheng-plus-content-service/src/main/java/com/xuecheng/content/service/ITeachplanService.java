@@ -2,11 +2,13 @@ package com.xuecheng.content.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xuecheng.model.dto.BindTeachplanMediaDto;
 import com.xuecheng.model.dto.EditCourseTeacherDto;
 import com.xuecheng.model.dto.SaveTeachplanDto;
 import com.xuecheng.model.dto.TeachplanDto;
 import com.xuecheng.model.po.CourseTeacher;
 import com.xuecheng.model.po.Teachplan;
+import com.xuecheng.model.po.TeachplanMedia;
 
 import java.util.List;
 
@@ -79,4 +81,14 @@ public interface ITeachplanService extends IService<Teachplan> {
      * @param companyId
      */
     void deletecourse(Long courseId, Long companyId);
+
+    /**
+     * @description 教学计划绑定媒资
+     * @param bindTeachplanMediaDto
+     * @return com.xuecheng.content.model.po.TeachplanMedia
+     * @author Mr.M
+     * @date 2022/9/14 22:20
+     */
+    public TeachplanMedia associationMedia(BindTeachplanMediaDto bindTeachplanMediaDto);
+
 }

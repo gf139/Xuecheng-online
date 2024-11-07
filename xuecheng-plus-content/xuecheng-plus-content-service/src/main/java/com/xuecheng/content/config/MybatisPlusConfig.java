@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
  *        Mybatis-Plus 配置
  * </p>
  */
+// todo 临时注释防止冲突
 @Configuration
 @MapperScan("com.xuecheng.content.mapper")
 public class MybatisPlusConfig {
