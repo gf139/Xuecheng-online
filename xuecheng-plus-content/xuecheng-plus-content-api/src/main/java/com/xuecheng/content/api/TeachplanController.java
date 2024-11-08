@@ -86,4 +86,10 @@ public class TeachplanController {
         iTeachplanService.associationMedia(bindTeachplanMediaDto);
     }
 
+    @ApiOperation("删除媒资视频")
+    @DeleteMapping("/teachplan/association/media/{teachPlanId}/{mediaId}")
+    public void deleteMedia(@PathVariable Long teachPlanId,@PathVariable String mediaId) {
+        Long companyId = 1232141425L;
+        iTeachplanService.deleteMedia(companyId,teachPlanId,mediaId);
+    }
 }

@@ -91,4 +91,8 @@ public interface ITeachplanService extends IService<Teachplan> {
      */
     public TeachplanMedia associationMedia(BindTeachplanMediaDto bindTeachplanMediaDto);
 
+    /**
+     * 删除课程绑定视频
+     */
+    public void deleteMedia(Long companyId, Long teachPlanId, String mediaId);
 }

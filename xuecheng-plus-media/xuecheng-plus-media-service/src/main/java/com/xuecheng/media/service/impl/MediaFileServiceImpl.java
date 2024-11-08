@@ -65,6 +65,7 @@ public class MediaFileServiceImpl implements MediaFileService {
     MediaProcessMapper mediaProcessMapper;
 
 
+
     //普通文件桶
     @Value("${minio.bucket.videofiles}")
     private String bucket_videoFiles;

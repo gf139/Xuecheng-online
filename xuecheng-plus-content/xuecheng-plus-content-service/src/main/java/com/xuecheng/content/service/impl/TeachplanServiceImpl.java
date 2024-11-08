@@ -340,4 +340,29 @@ public class TeachplanServiceImpl extends ServiceImpl<TeachplanMapper, Teachplan
         teachplanMediaMapper.insert(teachplanMedia);
         return teachplanMedia;
     }
+
+    /**
+     * 删除课程绑定视频
+     */
+    @Transactional
+    public void deleteMedia(Long companyId, Long teachPlanId, String mediaId) {
+        Teachplan teachplan = teachplanMapper.selectById(teachPlanId);
+        if(teachplan == null){
+            XueChengPlusException.cast("教学计划不存在");
+            return;
+        }
+        CourseBase courseBase = courseBaseMapper.selectById(teachplan.getCourseId());
+        if(!companyId.equals(courseBase.getCompanyId())){
+            XueChengPlusException.cast("只能删除本公司视频");
+            return;
+        }
+        LambdaQueryWrapper<TeachplanMedia> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(TeachplanMedia::getTeachplanId,teachPlanId);
+        queryWrapper.eq(TeachplanMedia::getMediaId,mediaId);
+        int delete = teachplanMediaMapper.delete(queryWrapper);
+        if(delete == 0){
+            XueChengPlusException.cast("删除失败或者找不到文件");
+            return;
+        }
+    }
 }
