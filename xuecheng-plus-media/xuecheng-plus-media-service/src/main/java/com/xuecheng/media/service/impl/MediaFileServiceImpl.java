@@ -22,6 +22,7 @@ import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -288,7 +291,7 @@ public class MediaFileServiceImpl implements MediaFileService {
      * @return
      */
     public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String
-            localFilePath) {
+            localFilePath,String objectName,String folder){
         File file = new File(localFilePath);
         if (!file.exists()) {
             XueChengPlusException.cast("文件不存在");
@@ -304,7 +307,31 @@ public class MediaFileServiceImpl implements MediaFileService {
         //md5值
         String fileMd5 = getFileMd5(file);
         //拼好上传的路径名称
-        String objectName = defaultFolderPath + fileMd5 + extension;
+
+        if(StringUtils.isEmpty(objectName)&&StringUtils.isEmpty(folder)){
+            //为空走这条拼接线路
+            objectName = defaultFolderPath + fileMd5 + extension;
+        }else{
+            //不为空拼
+            if(!StringUtils.isEmpty(folder)){
+                // 将字符串路径转换为 Path 对象
+                Path path = Paths.get(objectName);
+
+                // 获取路径的最后一部分（即 objectName）
+                Path fileName = path.getFileName();
+
+                // 创建一个新的路径，将新路径部分与原路径的父路径结合
+                Path parentPath = path.getParent();
+                if (parentPath == null) {
+                    // 如果 parentPath 为 null，直接使用 folder 和 fileName 构建新路径
+                    objectName = folder + "/" + fileName;
+                } else {
+                    Path newPath = parentPath.resolve(folder).resolve(fileName);
+                    objectName = newPath.toString();
+                }
+            }
+        }
+
         boolean b = addMediaFilesToMinIO(localFilePath, mimeType, bucket_Files, objectName);
         if (!b) {
             XueChengPlusException.cast("上传文件失败");
