@@ -4,6 +4,7 @@ import com.xuecheng.base.exception.ValidationGroups;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.content.service.CourseBaseInfoService;
+import com.xuecheng.content.util.SecurityUtil;
 import com.xuecheng.model.dto.AddCourseDto;
 import com.xuecheng.model.dto.CourseBaseInfoDto;
 import com.xuecheng.model.dto.EditCourseDto;
@@ -43,12 +44,6 @@ public class CourseBaseInfoController {
         return courseBaseInfoService.createCourseBase(companyId, addCourseDto);
     }
 
-    @ApiOperation("根据课程id查询课程基础信息")
-    @GetMapping("/course/{courseId}")
-    public CourseBaseInfoDto getCourseBaseById(@PathVariable Long courseId){
-        //查询营销信息
-        return courseBaseInfoService.getCourseBaseInfo(courseId);
-    }
 
     @ApiOperation("修改课程基础信息")
     @PutMapping("/course")
@@ -58,5 +53,14 @@ public class CourseBaseInfoController {
         return courseBaseInfoService.updateCourseBase(companyId,editCourseDto);
     }
 
-
+    @ApiOperation("根据课程id查询课程基础信息")
+    @GetMapping("/course/{courseId}")
+    public CourseBaseInfoDto getCourseBaseById(@PathVariable("courseId") Long courseId){
+        //取出当前用户身份
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        System.out.println(principal);
+        SecurityUtil.XcUser user = SecurityUtil.getUser();
+        System.out.println(user.getName());
+        return courseBaseInfoService.getCourseBaseInfo(courseId);
+    }
 }
