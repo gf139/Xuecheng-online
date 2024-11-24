@@ -170,5 +170,4 @@ public class WxAuthServiceImpl implements AuthService, WxAuthService {
         return resultMap;
     }
 
-
 }

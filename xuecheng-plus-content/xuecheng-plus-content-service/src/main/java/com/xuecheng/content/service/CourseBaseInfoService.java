@@ -14,18 +14,19 @@ import com.xuecheng.model.po.CourseBase;
 public interface CourseBaseInfoService {
 
     //课程分页查询
-    PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
+    PageResult<CourseBase> queryCourseBaseList(Long companyId, PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
 
     /**
-     * @description 添加课程基本信息
-     * @param companyId  教学机构id
-     * @param addCourseDto  课程基本信息
+     * @param companyId    教学机构id
+     * @param addCourseDto 课程基本信息
      * @return com.xuecheng.content.model.dto.CourseBaseInfoDto
+     * @description 添加课程基本信息
      */
     CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto addCourseDto);
 
     /**
      * 根据用户id查找用户基本信息
+     *
      * @param courseId
      * @return
      */
@@ -33,6 +34,7 @@ public interface CourseBaseInfoService {
 
     /**
      * 根据id进行更新
+     *
      * @param companyId
      * @param editCourseDto
      * @return

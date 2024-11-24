@@ -41,9 +41,11 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
      * @param queryCourseParamsDto
      * @return
      */
-    public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
-        //测试查询接口
+    public PageResult<CourseBase> queryCourseBaseList(Long companyId, PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
+        //构建查询条件对象(教学机构细粒度授权)
         LambdaQueryWrapper<CourseBase> queryWrapper = new LambdaQueryWrapper<>();
+        //机构id
+        queryWrapper.eq(CourseBase::getCompanyId,companyId);
 
         //不为空才会进行模糊匹配
         queryWrapper.like(StringUtils.isNotEmpty(queryCourseParamsDto.getCourseName()),CourseBase::getName,queryCourseParamsDto.getCourseName());
@@ -69,6 +71,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         PageResult<CourseBase> courseBasePageResult = new PageResult<>(items,total,pageParams.getPageNo(),pageParams.getPageSize());
         return courseBasePageResult;
     }
+
 
     @Transactional
     public CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto dto) {
