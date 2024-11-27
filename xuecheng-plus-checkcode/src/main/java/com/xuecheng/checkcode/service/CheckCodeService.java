@@ -2,10 +2,6 @@ package com.xuecheng.checkcode.service;
 
 import com.xuecheng.checkcode.model.CheckCodeParamsDto;
 import com.xuecheng.checkcode.model.CheckCodeResultDto;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * @author Mr.M
@@ -34,6 +30,8 @@ public interface CheckCodeService {
       * @date 2022/9/29 18:46
      */
     public boolean verify(String key, String code);
+
+
 
 
     /**

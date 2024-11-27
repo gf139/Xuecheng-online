@@ -1,18 +1,17 @@
 package com.xuecheng.checkcode.controller;
 
-import com.xuecheng.base.model.RestResponse;
 import com.xuecheng.checkcode.model.CheckCodeParamsDto;
 import com.xuecheng.checkcode.model.CheckCodeResultDto;
 import com.xuecheng.checkcode.service.CheckCodeService;
+import com.xuecheng.checkcode.service.SendCheckCodeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * @author Mr.M
@@ -26,6 +25,9 @@ public class CheckCodeController {
 
     @Resource(name = "PicCheckCodeService")
     private CheckCodeService picCheckCodeService;
+
+    @Resource(name = "SendCheckCodeService")
+    private SendCheckCodeService sendCheckCodeService;
 
 
     @ApiOperation(value="生成验证信息", notes="生成验证信息")
@@ -45,4 +47,12 @@ public class CheckCodeController {
         Boolean isSuccess = picCheckCodeService.verify(key,code);
         return isSuccess;
     }
+
+    @ApiOperation(value="发送验证码", notes="发送验证码")
+    @PostMapping(value = "/phone")
+    public CheckCodeResultDto generatePhoneCheckCode(CheckCodeParamsDto checkCodeParamsDto){
+        return sendCheckCodeService.sendCheckCodeByPhone(checkCodeParamsDto);
+        //return null;
+    }
+
 }

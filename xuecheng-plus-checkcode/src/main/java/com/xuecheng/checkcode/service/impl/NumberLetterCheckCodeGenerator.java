@@ -1,6 +1,5 @@
 package com.xuecheng.checkcode.service.impl;
 
-import com.xuecheng.checkcode.model.CheckCodeParamsDto;
 import com.xuecheng.checkcode.service.CheckCodeService;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +26,7 @@ public class NumberLetterCheckCodeGenerator implements CheckCodeService.CheckCod
         }
         return sb.toString();
     }
+
 
 
 }
