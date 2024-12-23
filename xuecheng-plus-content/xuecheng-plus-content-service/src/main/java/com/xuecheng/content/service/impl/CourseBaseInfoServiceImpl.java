@@ -45,9 +45,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         //构建查询条件对象(教学机构细粒度授权)
         LambdaQueryWrapper<CourseBase> queryWrapper = new LambdaQueryWrapper<>();
         //机构id
-        if(companyId!=null){
-            queryWrapper.eq(CourseBase::getCompanyId,companyId);
-        }
+        queryWrapper.eq(CourseBase::getCompanyId,companyId);
 
         //不为空才会进行模糊匹配
         queryWrapper.like(StringUtils.isNotEmpty(queryCourseParamsDto.getCourseName()),CourseBase::getName,queryCourseParamsDto.getCourseName());
