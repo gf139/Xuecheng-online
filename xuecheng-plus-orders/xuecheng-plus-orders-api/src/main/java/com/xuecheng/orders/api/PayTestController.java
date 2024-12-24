@@ -6,8 +6,6 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.xuecheng.orders.config.AlipayConfig;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +18,7 @@ import java.io.IOException;
  * @description 测试支付宝接口
  * @date 2022/10/20 22:19
  */
-@Controller
+//@Controller
 public class PayTestController {
 
     @Value("${pay.alipay.APP_ID}")
@@ -33,7 +31,7 @@ public class PayTestController {
 
 
 
-    @RequestMapping("/alipaytest")
+    //@RequestMapping("/alipaytest")
     public void doPost(HttpServletRequest httpRequest,
                        HttpServletResponse httpResponse) throws ServletException, IOException, AlipayApiException {
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.URL, APP_ID, APP_PRIVATE_KEY, AlipayConfig.FORMAT, AlipayConfig.CHARSET, ALIPAY_PUBLIC_KEY,AlipayConfig.SIGNTYPE);

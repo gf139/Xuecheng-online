@@ -32,8 +32,8 @@ public class MyCourseTablesController {
     MyCourseTablesService courseTablesService;
 
     @ApiOperation("添加选课")
-//    @PostMapping("/choosecourse/{courseId}")
-    @PostMapping("/choosecourse/learnstatus/{courseId}")
+    @PostMapping("/choosecourse/{courseId}")
+    //@PostMapping("/choosecourse/learnstatus/{courseId}")
     public XcChooseCourseDto addChooseCourse(@PathVariable("courseId") Long courseId) {
         //登录用户
         SecurityUtil.XcUser user = SecurityUtil.getUser();
@@ -46,8 +46,8 @@ public class MyCourseTablesController {
     }
 
     @ApiOperation("查询学习资格")
-//    @PostMapping("/choosecourse/learnstatus/{courseId}")
-    @PostMapping("/choosecourse/{courseId}")
+    @PostMapping("/choosecourse/learnstatus/{courseId}")
+//    @PostMapping("/choosecourse/{courseId}")
     public XcCourseTablesDto getLearnstatus(@PathVariable("courseId") Long courseId) {
         //登录用户
         SecurityUtil.XcUser user = SecurityUtil.getUser();
