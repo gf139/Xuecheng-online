@@ -285,4 +285,9 @@ public class CoursePublishServiceImpl implements CoursePublishService {
             XueChengPlusException.cast("上传静态文件异常");
         }
     }
+
+    public CoursePublish getCoursePublish(Long courseId){
+        CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
+        return coursePublish ;
+    }
 }

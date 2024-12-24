@@ -37,7 +37,8 @@ public class CourseBaseInfoController {
         //取出用户身份
         SecurityUtil.XcUser user = SecurityUtil.getUser();
         //机构id
-        String companyId = user.getCompanyId();
+        //String companyId = user.getCompanyId();
+        String companyId = "1232141425";
         return courseBaseInfoService.queryCourseBaseList(Long.parseLong(companyId),pageParams,queryCourseParams);
     }
 
