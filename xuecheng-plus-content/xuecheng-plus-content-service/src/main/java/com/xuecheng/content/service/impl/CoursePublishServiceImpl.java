@@ -23,13 +23,17 @@ import com.xuecheng.model.po.CourseBase;
 import com.xuecheng.model.po.CourseMarket;
 import com.xuecheng.model.po.CoursePublish;
 import com.xuecheng.model.po.CoursePublishPre;
+import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
@@ -42,6 +46,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Mr.M
@@ -80,6 +85,11 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     @Autowired
     MediaServiceClient mediaServiceClient;
 
+    @Autowired
+    RedisTemplate redisTemplate;
+
+    @Autowired
+    RedissonClient redissonClient;
 
     @Override
     public CoursePreviewDto getCoursePreviewInfo(Long courseId) {
@@ -244,8 +254,10 @@ public class CoursePublishServiceImpl implements CoursePublishService {
             //加载模板
             //选指定模板路径,classpath下templates下
             //得到classpath路径
-            String classpath = this.getClass().getResource("/").getPath();
-            configuration.setDirectoryForTemplateLoading(new File(classpath + "/templates/"));
+//            String classpath = this.getClass().getResource("/").getPath();
+//            configuration.setDirectoryForTemplateLoading(new File(classpath + "/templates/"));
+            //更改为如下方式
+            configuration.setTemplateLoader(new ClassTemplateLoader(this.getClass().getClassLoader(),"/templates"));
             //设置字符编码
             configuration.setDefaultEncoding("utf-8");
 
@@ -289,5 +301,39 @@ public class CoursePublishServiceImpl implements CoursePublishService {
     public CoursePublish getCoursePublish(Long courseId){
         CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
         return coursePublish ;
+    }
+
+    //Redisson分布式锁
+    public  CoursePublish getCoursePublishCache(Long courseId){
+        //查询缓存
+        String jsonString = (String) redisTemplate.opsForValue().get("course:" + courseId);
+        if(StringUtils.isNotEmpty(jsonString)){
+            if(jsonString.equals("null")){
+                return null;
+            }
+            CoursePublish coursePublish = JSON.parseObject(jsonString, CoursePublish.class);
+            return coursePublish;
+        }else{
+            //每门课程设置一个锁
+            RLock lock = redissonClient.getLock("coursequerylock:"+courseId);
+            //获取锁
+            lock.lock();
+            try {
+                jsonString = (String) redisTemplate.opsForValue().get("course:" + courseId);
+                if(StringUtils.isNotEmpty(jsonString)){
+                    CoursePublish coursePublish = JSON.parseObject(jsonString, CoursePublish.class);
+                    return coursePublish;
+                }
+                System.out.println("=========从数据库查询==========");
+                //从数据库查询
+                CoursePublish coursePublish = getCoursePublish(courseId);
+                redisTemplate.opsForValue().set("course:" + courseId, JSON.toJSONString(coursePublish),1,TimeUnit.DAYS);
+                return coursePublish;
+            }finally {
+                //释放锁
+                lock.unlock();
+            }
+        }
+
     }
 }
